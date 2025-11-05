@@ -42,6 +42,7 @@ export const useAuthStore = create<AuthState>((set, get)=>( {
             const {accessToken} = await authService.signIn(username, password)
             set({accessToken})
             toast.success("Signin successful!")
+            await get().fetchMe();
         }
         catch (error: any){
             console.log(error)
@@ -52,16 +53,35 @@ export const useAuthStore = create<AuthState>((set, get)=>( {
             set({loading:false})
         }
     },
-    signOut : async ()=>{
+    signOut : async ()=>{        
+   
         try{
-            get().clearState();
+            // Gọi API logout trước khi clear state để có accessToken
             await authService.signOut();
+            get().clearState();
             toast.success("Signout successful!")
             
         }
         catch (error:any){
             console.log(error)
+            // Dù API thất bại vẫn clear state để logout local
+            get().clearState();
             toast.error(error?.response?.data?.message || "Signout failed. Please try again.")
+        }
+    },
+    fetchMe : async ()=>{
+        try{
+           set({loading:true})
+           const {user} = await authService.fetchMe();
+           set({user});
+        }
+        catch (error:any){
+            console.log(error)
+            toast.error(error?.response?.data?.message || "Fetch user info failed. Please try again.")
+            set({user:null, accessToken:null});
+        }
+        finally {
+            set({loading:false})
         }
     }
 }))
