@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import connectDB from './config/database.js';
 import authRoutes from './routes/authRoute.js';
 import cookieParser from 'cookie-parser';
+import userRoute from './routes/userRoute.js';
+import { protectedRoute } from './middleware/authMiddleware.js';
 // Load environment variables
 dotenv.config();
 
@@ -23,7 +25,8 @@ app.use('/api/auth', authRoutes);
 
 
 //private routes
-
+app.use(protectedRoute)
+app.use('/api/users', userRoute);
 
 // Routes
 app.get('/', (req, res) => {
