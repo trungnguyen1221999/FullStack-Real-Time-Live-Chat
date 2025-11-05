@@ -17,9 +17,28 @@ export const useAuthStore = create<AuthState>((set, get)=>( {
             await authService.signUp(username, password, email, firstName, lastName)
             toast.success("Signup successful! Please sign in.")
         }
-        catch (error){
+        catch (error:any){
             console.log(error)
-            toast.error("Signup failed. Please try again.")
+            toast.error(error?.response?.data?.message || "Signup failed. Please try again.")
+            throw error; // ← Throw error để login form biết signup thất bại
+
+        }
+        finally {
+            set({loading:false})
+        }
+    }
+    ,
+    signIn : async (username, password)=>{
+        try{
+            set({loading:true})
+            const {accessToken} = await authService.signIn(username, password)
+            set({accessToken})
+            toast.success("Signin successful!")
+        }
+        catch (error: any){
+            console.log(error)
+            toast.error(error?.response?.data?.message || "Signin failed. Please try again.")
+            throw error; // ← Throw error để login form biết signin thất bại
         }
         finally {
             set({loading:false})

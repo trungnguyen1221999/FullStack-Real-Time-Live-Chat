@@ -7,7 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
+import { useAuthStore } from "@/stores/useAuthStore"
 
 // --- Schema Validation ---
 const signinSchema = z.object({
@@ -16,7 +17,7 @@ const signinSchema = z.object({
     .min(3, "Username must be at least 3 characters")
     .max(20, "Username must be at most 20 characters")
     .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 })
 
 type SigninFormValues = z.infer<typeof signinSchema>
@@ -26,16 +27,25 @@ export function SigninForm({ className, ...props }: React.ComponentProps<"div">)
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<SigninFormValues>({
     resolver: zodResolver(signinSchema),
-  })
+  })  
+  const { signIn } = useAuthStore();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: SigninFormValues) => {
-    console.log("✅ Signin data:", data)
-    await new Promise((r) => setTimeout(r, 1000))
-    reset()
-    alert("Signed in successfully!")
+    const { username, password } = data;
+
+    //goi backend de signin
+    try{
+      await signIn(username, password)
+      // Chỉ navigate khi signin thành công
+      navigate("/");
+    } catch (error){
+      // Error đã được handle trong useAuthStore (toast.error)
+      // Không navigate, user ở lại trang login
+      console.log("Signin failed:", error);
+    }
   }
 
   return (

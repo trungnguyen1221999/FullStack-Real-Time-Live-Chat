@@ -49,9 +49,14 @@ export function SignupForm({
     const { firstName, lastName, username, email, password } = data;
 
     //goi backend de signup
-    await signUp(username, password, email, firstName, lastName).then(() => {
-      navigate("/signin");
-    });
+    try{
+    await signUp(username, password, email, firstName, lastName)
+    navigate("/signin");
+    } catch (error){
+      // Error đã được handle trong useAuthStore (toast.error)
+      // Không navigate, user ở lại trang signup
+      console.log("Signup failed:", error);
+    }
 
   }
 
