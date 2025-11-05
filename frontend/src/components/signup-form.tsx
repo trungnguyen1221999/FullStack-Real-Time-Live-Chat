@@ -7,7 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
+import { useAuthStore } from "@/stores/useAuthStore"
 
 // --- Schema Validation ---
 const signupSchema = z
@@ -20,7 +21,7 @@ const signupSchema = z
       .max(20, "Username must be at most 20 characters")
       .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
     email: z.string().email("Invalid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -38,16 +39,20 @@ export function SignupForm({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    reset,
   } = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
   })
+  const { signUp } = useAuthStore();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: SignupFormValues) => {
-    console.log("✅ Form data:", data)
-    await new Promise((r) => setTimeout(r, 1000))
-    reset()
-    alert("Account created successfully!")
+    const { firstName, lastName, username, email, password } = data;
+
+    //goi backend de signup
+    await signUp(username, password, email, firstName, lastName).then(() => {
+      navigate("/signin");
+    });
+
   }
 
   return (
@@ -195,7 +200,7 @@ export function SignupForm({
                 </div>
               </div>
               <p className="text-xs text-muted-foreground mt-1">
-                Must be at least 8 characters long.
+                Must be at least 6 characters long.
               </p>
             </div>
 
