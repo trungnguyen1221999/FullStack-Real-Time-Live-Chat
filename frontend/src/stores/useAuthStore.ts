@@ -23,7 +23,7 @@ export const useAuthStore = create<AuthState>((set, get)=>( {
             set({loading:true})
             //call api
             await authService.signUp(username, password, email, firstName, lastName)
-            toast.success("Signup successful! Please sign in.")
+            toast.success("🎉 Signup successful! Please sign in.")
         }
         catch (error:any){
             console.log(error)
@@ -41,7 +41,7 @@ export const useAuthStore = create<AuthState>((set, get)=>( {
             set({loading:true})
             const {accessToken} = await authService.signIn(username, password)
             set({accessToken})
-            toast.success("Signin successful!")
+            toast.success("🎉 Signin successful!")
             await get().fetchMe();
         }
         catch (error: any){
@@ -59,7 +59,7 @@ export const useAuthStore = create<AuthState>((set, get)=>( {
             // Gọi API logout trước khi clear state để có accessToken
             await authService.signOut();
             get().clearState();
-            toast.success("Signout successful!")
+            toast.success("👋 Signout successful!")
             
         }
         catch (error:any){
@@ -83,5 +83,24 @@ export const useAuthStore = create<AuthState>((set, get)=>( {
         finally {
             set({loading:false})
         }
+    },
+    refresh: async ()=>{
+        try{
+            set({loading:true})
+            const {user, fetchMe} = get();
+            const accessToken = await authService.refresh();
+            set({accessToken});
+            if(!user){
+                await fetchMe();
+            }
+        }
+        catch (error:any){
+            console.log(error)
+            get().clearState();
+            toast.error(error?.response?.data?.message || "Session expired. Please sign in again.")
+        }
+        finally {
+            set({loading:false})
+        }
     }
-}))
+}));

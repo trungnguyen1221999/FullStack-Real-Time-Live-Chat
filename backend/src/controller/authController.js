@@ -115,3 +115,32 @@ catch (error) {
     res.status(500).json({ message: 'Internal server error', success: false, error: true });
 }
 }
+//tao accessToken moi khi refreshToken hop le
+export const refreshToken = async (req, res) => {
+    try {
+        //lay refreshToken tu cookie
+        const refreshToken = req.cookies?.refreshToken;
+        if(!refreshToken) {
+            return res.status(401).json({ message: 'No refresh token provided', success: false, error: true });
+        }
+        //kiem tra refreshToken trong db
+        const session = await Session.findOne({ refreshToken });
+        if(!session) {
+            return res.status(403).json({ message: 'Invalid refresh token', success: false, error: true });
+        }
+
+        //kiem tra het han chua
+        if(session.expiredAt < new Date()) {
+            return res.status(403).json({ message: 'Refresh token has expired', success: false, error: true });
+        }
+
+        //tao accessToken moi
+        const accessToken = generateAccessToken(session.userId);
+
+        //tra ve client
+        res.status(200).json({ message: 'Access token refreshed successfully', success: true, error: false, accessToken });
+    }
+    catch (error) {
+        console.error('Error occurred during signout:', error);
+        res.status(500).json({ message: 'Internal server error', success: false, error: true });
+    }   }
