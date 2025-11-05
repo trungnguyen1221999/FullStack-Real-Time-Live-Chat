@@ -10,15 +10,16 @@ function App() {
   return (
     <>
     <Toaster richColors />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/signin" element={<SignInPage />} />
-          {/* protected routes */}
-        <Route element={<ProtectedRoute />}>  <Route path="/" element={<ChatPage />} /></Route>
-        </Routes>
-      </BrowserRouter>
-      
+      <div className='min-h-screen bg-gradient-purple'>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/signin" element={<SignInPage />} />
+            {/* protected routes */}
+          <Route element={<ProtectedRoute />}>  <Route path="/" element={<ChatPage />} /></Route>
+          </Routes>
+        </BrowserRouter>
+      </div>
     </>
   )
 }
