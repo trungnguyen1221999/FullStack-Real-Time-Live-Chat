@@ -17,6 +17,9 @@ export const useAuthStore = create<AuthState>((set, get)=>( {
             loading: false,
         })
     },
+    setAccessToken: (token: string)=>{
+        set({accessToken: token});
+    },
 
     signUp : async (username, password, email, firstName, lastName)=>{
         try{
@@ -40,7 +43,7 @@ export const useAuthStore = create<AuthState>((set, get)=>( {
         try{
             set({loading:true})
             const {accessToken} = await authService.signIn(username, password)
-            set({accessToken})
+           get().setAccessToken(accessToken);
             toast.success("🎉 Signin successful!")
             await get().fetchMe();
         }
@@ -87,9 +90,9 @@ export const useAuthStore = create<AuthState>((set, get)=>( {
     refresh: async ()=>{
         try{
             set({loading:true})
-            const {user, fetchMe} = get();
+            const {user, fetchMe, setAccessToken} = get();
             const accessToken = await authService.refresh();
-            set({accessToken});
+            setAccessToken(accessToken);
             if(!user){
                 await fetchMe();
             }

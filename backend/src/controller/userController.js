@@ -8,3 +8,7 @@ export const authMe = async (req, res) => {
         return res.status(500).json({ message: 'Internal server error', success: false, error: true });
     }
 }
+
+export const test = async (req, res) => {
+    return res.status(200).json({ message: 'Test route is working!', success: true, error: false });
+}

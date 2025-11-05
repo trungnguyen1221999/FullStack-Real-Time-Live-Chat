@@ -25,12 +25,9 @@ app.use(cookieParser());
 app.use(express.json());
 
 //public routes
-
 app.use('/api/auth', authRoutes);
 
-
-
-//private routes
+//private routes - apply middleware only to specific routes
 app.use(protectedRoute)
 app.use('/api/users', userRoute);
 
