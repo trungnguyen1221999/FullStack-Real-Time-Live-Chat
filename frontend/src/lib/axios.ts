@@ -1,5 +1,6 @@
 import { useAuthStore } from "@/stores/useAuthStore";
 import axios from "axios";
+import { toast } from "sonner";
 const api = axios.create({
   baseURL: import.meta.env.MODE === "development" ? "http://localhost:5001/api" : "/api",
   withCredentials: true,
@@ -24,7 +25,7 @@ api.interceptors.response.use((response) => response, async (error) => {
         return Promise.reject(error);
       }
       originalRequest._retryCount = originalRequest._retryCount || 0;
-      console.log(originalRequest._retryCount)
+      toast.success(originalRequest._retryCount)
       if(error.response.status === 403 && originalRequest._retryCount < 4){
         originalRequest._retryCount += 1;
         try{
