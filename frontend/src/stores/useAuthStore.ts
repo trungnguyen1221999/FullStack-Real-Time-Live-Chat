@@ -10,6 +10,14 @@ export const useAuthStore = create<AuthState>((set, get)=>( {
     user: null,
     loading: false,
 
+    clearState : ()=>{
+        set({
+            accessToken: null,
+            user: null,
+            loading: false,
+        })
+    },
+
     signUp : async (username, password, email, firstName, lastName)=>{
         try{
             set({loading:true})
@@ -42,6 +50,18 @@ export const useAuthStore = create<AuthState>((set, get)=>( {
         }
         finally {
             set({loading:false})
+        }
+    },
+    signOut : async ()=>{
+        try{
+            get().clearState();
+            await authService.signOut();
+            toast.success("Signout successful!")
+            
+        }
+        catch (error:any){
+            console.log(error)
+            toast.error(error?.response?.data?.message || "Signout failed. Please try again.")
         }
     }
 }))

@@ -17,5 +17,8 @@ export const authService = {
             password
         }, {withCredentials: true});
         return response.data;
+        },
+        signOut : ()=>{
+            return api.post("/auth/signout", {}, {withCredentials: true});
         }
 }
