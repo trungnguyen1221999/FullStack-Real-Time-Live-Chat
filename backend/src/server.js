@@ -27,10 +27,10 @@ app.use(express.json());
 
 //public routes
 app.use('/api/auth', authRoutes);
-app.use('/api/friends', friendRoutes);
+
 //private routes - apply middleware only to specific routes
-app.use(protectedRoute)
-app.use('/api/users', userRoute);
+app.use('/api/users', protectedRoute, userRoute);
+app.use('/api/friends', protectedRoute, friendRoutes);
 
 // Routes
 app.get('/', (req, res) => {
