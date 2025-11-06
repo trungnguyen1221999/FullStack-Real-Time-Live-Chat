@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoute.js';
 import cookieParser from 'cookie-parser';
 import userRoute from './routes/userRoute.js';
 import { protectedRoute } from './middleware/authMiddleware.js';
+import friendRoutes from './routes/friendRoute.js';
 import cors from 'cors';
 // Load environment variables
 dotenv.config();
@@ -26,7 +27,7 @@ app.use(express.json());
 
 //public routes
 app.use('/api/auth', authRoutes);
-
+app.use('/api/friends', friendRoutes);
 //private routes - apply middleware only to specific routes
 app.use(protectedRoute)
 app.use('/api/users', userRoute);
