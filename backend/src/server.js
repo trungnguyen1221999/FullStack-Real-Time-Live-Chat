@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import userRoute from './routes/userRoute.js';
 import { protectedRoute } from './middleware/authMiddleware.js';
 import friendRoutes from './routes/friendRoute.js';
+import messageRoutes from './routes/messageRoute.js';
 import cors from 'cors';
 // Load environment variables
 dotenv.config();
@@ -31,6 +32,7 @@ app.use('/api/auth', authRoutes);
 //private routes - apply middleware only to specific routes
 app.use('/api/users', protectedRoute, userRoute);
 app.use('/api/friends', protectedRoute, friendRoutes);
+app.use('/api/messages', protectedRoute, messageRoutes);
 
 // Routes
 app.get('/', (req, res) => {

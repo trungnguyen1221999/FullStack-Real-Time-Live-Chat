@@ -113,7 +113,13 @@ export const getAllFriends    = async (req, res) => {
 };  
 export const getFriendRequests = async (req, res) => {
     try {
-
+        const userId = req.user._id;
+        const populateFields = '_id username displayName avatarUrl';
+        const [sent, received] = await Promise.all([
+            FriendRequest.find({ from: userId }).populate('to', populateFields).lean(),
+            FriendRequest.find({ to: userId }).populate('from', populateFields).lean()
+        ]);
+        return res.status(200).json({ message: 'Friend requests fetched successfully', success: true, error: false, requests: { sent, received } });
     }
     catch (error) {
         console.error('Error occurred while fetching all friends:', error);
