@@ -7,6 +7,7 @@ import userRoute from './routes/userRoute.js';
 import { protectedRoute } from './middleware/authMiddleware.js';
 import friendRoutes from './routes/friendRoute.js';
 import messageRoutes from './routes/messageRoute.js';
+import conversationRoute from './routes/conversationRoute.js';
 import cors from 'cors';
 // Load environment variables
 dotenv.config();
@@ -33,6 +34,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', protectedRoute, userRoute);
 app.use('/api/friends', protectedRoute, friendRoutes);
 app.use('/api/messages', protectedRoute, messageRoutes);
+app.use("/api/conversations", conversationRoute);
 
 // Routes
 app.get('/', (req, res) => {

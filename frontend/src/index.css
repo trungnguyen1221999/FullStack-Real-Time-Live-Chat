@@ -169,7 +169,7 @@ button:focus-visible {
   --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.551 0.027 264.364);
-  --gradient-purple: radial-gradient(125% 125% at 50% 100%, #000000 40%, #350136 100%)
+  --gradient-purple: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(236, 72, 153, 0.25), transparent 70%), #000000;
 
 }
 
